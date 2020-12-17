@@ -1,0 +1,27 @@
+{ //*************************单地址多实例负载均衡+Consul*****************************
+  "Routes": [
+    {
+      //GeteWay转发=>Downstream
+      "DownstreamPathTemplate": "/{url}", //服务地址--url变量
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/{url}", //网关地址--url变量 冲突的还可以加权重Priority
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UseServiceDiscovery": true, //使用服务发现
+      "ServiceName": "wechat-service", //Consul服务名称
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin" //轮询  //"LeastConnection":最少连接数服务器   "NoloadBalance":不负载均衡     "CookieStickySession":会话粘滞
+      },
+      "ReRoutesCaseSensitive": false
+    }
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "BaseUrl": "http://127.0.0.1:6299",
+    "ServiceDiscoveryProvider": {
+      "Host": "192.168.4.124",
+      "Port": 8500,
+      "Type": "Consul" //由Consul提供服务发现,每次请求去Consul
+    }
+  }
+  //*************************单地址多实例负载均衡+Consul*****************************
+}
